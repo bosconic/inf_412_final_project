@@ -1,4 +1,5 @@
 library(tidyverse)
+library(readr)
 
 DISPENSARIES_FILEPATH <- "data/acgo_dispensary_data.csv"
 NEIGHBOURHOODS_FILEPATH <- "data/opendata_toronto_neighbourhoods.csv"
@@ -19,7 +20,7 @@ if (!file.exists(NEIGHBOURHOODS_FILEPATH)) {
     data.neighbourhoods <- read_csv(
         "https://ckan0.cf.opendata.inter.prod-toronto.ca/dataset/neighbourhoods/resource/db634f74-36c9-4caa-84be-256e304a89de/download/Neighbourhoods%20-%204326.csv"
     )
-    write.csv(data.neighbourhoods, NEIGHBOURHOODS_FILEPATH)
+    write_csv(data.neighbourhoods, NEIGHBOURHOODS_FILEPATH)
 } else {
     print("Reading neighbourhood data from existing file")
     data.neighbourhoods <- read_csv((NEIGHBOURHOODS_FILEPATH))
@@ -35,7 +36,7 @@ if (!file.exists(POSTAL_CODES_FILEPATH)) {
     unlink(temp)
 } else {
     print("Reading postal codes data from existing file")
-    data.postal_codes <- read_csv(POSTAL_CODES_FILEPATH)
+    data.postal_codes <- read_csv(POSTAL_CODES_FILEPATH, show_col_types = FALSE)
 }
 
 if (!file.exists(BUSINESSES_FILEPATH)) {
@@ -56,3 +57,8 @@ if (!file.exists(BUSINESSES_FILEPATH)) {
     print("Reading businesses data from existing file")
     data.businesses <- read_csv((BUSINESSES_FILEPATH))
 }
+
+#See clean-data for cleaned data
+
+
+

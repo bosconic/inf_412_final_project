@@ -9,15 +9,42 @@ knitr::opts_chunk$set(
 
 ```{r libraries}
 library(tidyverse)
+library(modelsummary)
+library(readr)
 ```
 
-```{r fetch-data}
-source("scripts/fetch-data.r")
+```{r grabs cleaned-data}
+#calls the clean-data r and brings it to the markdown file, still would need to import individually though
+#input the individual computer directory in between the ""
+source("C:/Users/Owner/Desktop/inf_412_final_project/scripts/clean-data.r")
 ```
 
-```{r}
-data.businesses |>
-    filter(`Licence Address Line 3` |> str_starts("M")) |>
-    ggplot(aes(x = Longitude, y = Latitude, color = Category)) +
-    geom_point()
+# Exploratory Data Analysis
+These summaries, provide insight to finding the quick and dirty 5 summaries (mean,sd,min,med,max) and show us missing and unique data too which is helpful when selecting categories for features to help predict our next store location. As you can see with the location data it tries to treat the coordinates as numbers but they arent, and it only examines the numerical data. Theres a categorical function but idk how to use it.
+```{r random prelim summaries}
+#time for magic summaries
+summary_table.businesses <-
+data.businesses |> 
+  datasummary_skim(title = "Summary of businesses",
+                   notes = "Data Source: Open Data Toronto")
+summary_table.businesses
+
+summary_table.dispensary <-
+  data.dispensaries |>
+  datasummary_skim(title = "Summary of Dispensary",
+                   notes = "Data Source: Ontario Dispensary Website")
+summary_table.dispensary
+
+#Cannot run regular dataskim with neighbourhoods, I will attempt to do another summary later
+# summary_table.neighbourhoods <-
+#   data.neighbourhoods |>
+#   datasummary_correlation(title = "Summary of Neighbourhoods",
+#                     notes: "Data Source: Open Data Toronto")
+# summary_table.neighbourhoods
+
+summary_table.postal_codes <-
+  data_postalcodes |>
+  datasummary_skim(title = "Summary of Postal Codes",
+                   notes = "Data Source: Open Data Toronto")
+summary_table.postal_codes
 ```
