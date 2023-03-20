@@ -5,12 +5,15 @@ knitr::opts_chunk$set(
     warning = FALSE,
     cache = TRUE
 )
+# options(device  = "X11")
+# X11(type = "cairo")
 ```
 
 ```{r libraries}
 library(tidyverse)
 library(modelsummary)
 library(readr)
+library(sf)
 ```
 
 ```{r grabs cleaned-data}
@@ -18,6 +21,7 @@ library(readr)
 #input the individual computer directory in between the ""
 source("C:/Users/Owner/Desktop/inf_412_final_project/scripts/clean-data.r")
 ```
+
 
 # Exploratory Data Analysis
 These summaries, provide insight to finding the quick and dirty 5 summaries (mean,sd,min,med,max) and show us missing and unique data too which is helpful when selecting categories for features to help predict our next store location. As you can see with the location data it tries to treat the coordinates as numbers but they arent, and it only examines the numerical data. Theres a categorical function but idk how to use it.
@@ -47,4 +51,28 @@ summary_table.postal_codes <-
   datasummary_skim(title = "Summary of Postal Codes",
                    notes = "Data Source: Open Data Toronto")
 summary_table.postal_codes
+```
+
+```{r}
+toronto <- data.businesses |>
+    filter(`Licence Address Line 3` |> str_starts("M")) |>
+    filter(Category |> str_detect(paste(
+        c(
+            "RETAIL STORE \\(FOOD\\)"
+            ,"SMOKE SHOP"
+            ,"VAPOUR PRODUCT RETAILER"
+        ),
+        collapse = "|"
+    )))
+
+
+ggplot() +
+    # geom_sf(data = data.neighbourhoods) +
+    geom_point(data = toronto, aes(x = Longitude, y = Latitude, color=Category), pch = ".", alpha = .5) +
+    geom_density2d(data = toronto, mapping = aes(x = Longitude, y = Latitude,)) #+
+    # theme(legend.position = "none")
+# ggplot(aes(x = Longitude, y = Latitude)) +
+# # geom_sf(geometry = data.neighbourhoods) +e
+# geom_point(alpha = .1) +
+# geom_density2d()
 ```
